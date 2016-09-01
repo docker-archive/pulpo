@@ -1,0 +1,7 @@
+test/
+lib/
+coverage/
+.nyc_output/
+.babelrc
+.eslintignore
+.eslintrc.json

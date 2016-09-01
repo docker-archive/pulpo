@@ -1,0 +1,17 @@
+{
+  "env": {
+    "mocha": true
+  },
+  "globals": {
+    "assert": false,
+    "chai": false,
+    "expect": false,
+    "should": false,
+    "sinon": false
+  },
+  "rules": {
+    "func-names": 0,
+    "no-console": 0,
+    "no-new": 0
+  }
+}

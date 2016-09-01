@@ -1,0 +1,12 @@
+{
+  "foo": {
+    "description": "This is a description",
+    "type": "String",
+    "default": "bar",
+    "nested": {
+      "description": "Description for nested value",
+      "type": "Object",
+      "default": {}
+    }
+  }
+}
