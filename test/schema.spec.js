@@ -35,19 +35,21 @@ describe('Schema', () => {
     });
   });
 
-  describe('load', () => {
-    it('checks that schema is not already loaded', () => {
-      const schema = new Schema();
-      schema.schema = {};
-      expect(schema.load.bind(schema, {})).to.throw();
-    });
+  describe('prototype', () => {
+    describe('load', () => {
+      it('checks that schema is not already loaded', () => {
+        const schema = new Schema();
+        schema.schema = {};
+        expect(schema.load.bind(schema, {})).to.throw();
+      });
 
-    it('creates fields out of each key', () => {
-      const schema = new Schema(
-        { foo: { bar: 'baz' } },
-        { requiredKeys: ['bar'] }
-      );
-      expect(schema.fields.foo.name).to.be.equal('foo');
+      it('creates fields out of each key', () => {
+        const schema = new Schema(
+          { foo: { bar: 'baz' } },
+          { requiredKeys: ['bar'] }
+        );
+        expect(schema.fields.foo.name).to.be.equal('foo');
+      });
     });
   });
 });
