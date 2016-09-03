@@ -1,8 +1,16 @@
+import FieldFormat from './field-format';
 import Field from './field';
 
 export default class Schema {
-  static defaults = {
+  static defaults = {}
+  static fieldFormats = {}
 
+  static addFieldFormat(name, format) {
+    if (Schema.fieldFormats[name]) {
+      throw new Error(`Field format ${name} already exists`);
+    }
+
+    Schema.fieldFormats[name] = new FieldFormat(format);
   }
 
   constructor(rawSchema, options = {}) {

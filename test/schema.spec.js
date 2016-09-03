@@ -1,7 +1,24 @@
 import Schema from '../src/schema';
 
 describe('Schema', () => {
-  describe('creating a new schema', () => {
+  describe('addFieldFormat', () => {
+    let fieldFormats;
+
+    beforeEach(() => { fieldFormats = Schema.fieldFormats; });
+    afterEach(() => { Schema.fieldFormats = fieldFormats; });
+
+    it('throws if the format name already exists', () => {
+      Schema.fieldFormats = { foo: 'bar' };
+      expect(Schema.addFieldFormat.bind(Schema, 'foo', 'bar')).to.throw();
+    });
+
+    it('adds the format to the global list', () => {
+      Schema.addFieldFormat('foo', 'bar');
+      should.exist(Schema.fieldFormats.foo);
+    });
+  });
+
+  describe('constructor', () => {
     it('takes a JSON object on instantiation', () => {
       const spy = sinon.spy(Schema.prototype, 'load');
       const rawSchema = {
@@ -18,7 +35,7 @@ describe('Schema', () => {
     });
   });
 
-  describe('loading rawSchema', () => {
+  describe('load', () => {
     it('checks that schema is not already loaded', () => {
       const schema = new Schema();
       schema.schema = {};
