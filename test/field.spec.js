@@ -4,20 +4,28 @@ describe('Field', () => {
   describe('constructor', () => {
     it('validates the construction', () => {
       const spy = sinon.spy(Field.prototype, 'validateConstruction');
-      const args = ['foo', { foo: 'bar' }, { requiredKeys: ['foo'] }];
+      const args = ['foo', { bar: 'baz' }, { requiredKeys: ['bar'] }];
       new Field(...args);
       spy.should.have.been.calledWith(...args);
       spy.restore();
     });
 
     it('builds an array of keys from optional and required keys', () => {
-      const options = { requiredKeys: ['foo'], optionalKeys: ['bar'] };
-      const field = new Field('foo', { foo: 'bar' }, options);
-      expect(field.reservedKeys.sort().join(',')).to.equal('bar,foo');
+      const options = { requiredKeys: ['bar'], optionalKeys: ['baz'] };
+      const field = new Field('foo', { bar: 'baz' }, options);
+      expect(field.reservedKeys.sort().join(',')).to.equal('bar,baz');
+    });
+
+    it('validates the field name', () => {
+      const spy = sinon.spy(Field.prototype, 'validateName');
+      const args = ['foo', { bar: 'baz' }, { requiredKeys: ['bar'] }];
+      new Field(...args);
+      spy.should.have.been.calledWith('foo');
+      spy.restore();
     });
 
     it('stores the field name', () => {
-      const field = new Field('foo', { foo: 'bar' }, { requiredKeys: ['foo'] });
+      const field = new Field('foo', { bar: 'baz' }, { requiredKeys: ['bar'] });
       field.name.should.equal('foo');
     });
   });
@@ -46,6 +54,20 @@ describe('Field', () => {
     it('throws when options.optionalKeys is not an array', () => {
       expect(execute('foo', {}, { optionalKeys: 'bar' })).to.throw();
     });
+
+    it('does not throw when args are properly formatted', () => {
+      expect(
+        execute('foo', {}, { requiredKeys: ['bar'], optionalKeys: ['baz'] })
+      ).not.to.throw();
+    });
+  });
+
+  describe('validateName', () => {
+    it('only throws if name is a reserved key', () => {
+      const obj = { reservedKeys: ['foo'] };
+      expect(Field.prototype.validateName.bind(obj, 'foo')).to.throw();
+      expect(Field.prototype.validateName.bind(obj, 'bar')).not.to.throw();
+    });
   });
 
   describe('parseDefinition', () => {
@@ -60,7 +82,7 @@ describe('Field', () => {
 
   describe('validateDefinition', () => {
     it('looks for required keys in options', () => {
-      const field = new Field('foo', { foo: 'bar' }, { requiredKeys: ['foo'] });
+      const field = new Field('foo', { bar: 'baz' }, { requiredKeys: ['bar'] });
       expect(field.validateDefinition.bind(field, {})).to.throw();
     });
   });
@@ -70,12 +92,12 @@ describe('Field', () => {
     const rawSchema = require('./fixtures/nested-schema');
 
     it('parses required and optional fields into a schema', () => {
-      const field = new Field('foo', rawSchema.foo);
+      const field = new Field('bar', rawSchema.foo);
       should.exist(field.schema.description);
     });
 
     it('creates fields out of nested values', () => {
-      const field = new Field('foo', rawSchema.foo);
+      const field = new Field('bar', rawSchema.foo);
       field.nested.nested.name.should.equal('nested');
     });
   });

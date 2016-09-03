@@ -14,22 +14,22 @@ export default class Field {
   }
 
   constructor(name, definition, options = {}) {
-    // eslint-disable-next-line prefer-rest-params
-    this.validateConstruction(...arguments);
+    this.validateConstruction(name, definition, options);
 
     // Create local copies of definition and options
     // this._options is used for creating nested fields
     this._definition = Object.assign({}, definition);
     this._options = Object.assign({}, options);
 
-    this.name = name;
     this.options = Object.assign({}, Field.defaults, options);
+    this.name = name;
 
     this.reservedKeys = [
       ...this.options.requiredKeys,
       ...this.options.optionalKeys,
     ];
 
+    this.validateName(name);
     this.parseDefinition(this._definition);
   }
 
@@ -60,6 +60,12 @@ export default class Field {
       throw new Error(
         `Optional keys option for field ${this.name} must be an array`
       );
+    }
+  }
+
+  validateName(name) {
+    if (~this.reservedKeys.indexOf(name)) {
+      throw new Error(`Field name ${name} is a reserved key`);
     }
   }
 
