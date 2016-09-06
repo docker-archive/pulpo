@@ -1,0 +1,7 @@
+interface SchemaInterface {
+
+}
+
+interface SchemaDefinition {
+
+}

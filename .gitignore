@@ -6,3 +6,4 @@ lib/
 *.json.gzip
 coverage/
 .nyc_output/
+src/*.js
