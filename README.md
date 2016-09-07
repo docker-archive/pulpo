@@ -144,10 +144,12 @@ A property is comprised of the following keyed values:
 * **env** (*optional string*) - the `process.env` key for looking up a property value
 * **argv** (*optional string*) - the command line arg key for looking up a property value
 * **resolve** (*optional function*) - a function to look up a value from a config object in a different way than using the property name
+  
   ```js
   (configObject) => configObject.differentKey
   ```
 * **transform** (*optional function*) - a function that accepts a found value and maps it to a new value
+  
   ```js
   (value) => parseInt(value, 10)  
   ```
