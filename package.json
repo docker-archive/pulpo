@@ -35,7 +35,15 @@
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/preprocessor.js",
-    "moduleFileExtensions": ["ts", "tsx", "js"],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
     "testRegex": "/test/.*\\.spec\\.(ts|tsx|js)$"
+  },
+  "dependencies": {
+    "glob": "7.0.6",
+    "typecast": "0.0.1"
   }
 }

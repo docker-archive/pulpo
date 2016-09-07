@@ -1,3 +1,5 @@
+import Type from './type';
+
 interface PropertyDefinition {
   description: string;
   type: string;
@@ -10,10 +12,11 @@ interface PropertyDefinition {
 }
 
 interface PropertyInterface {
-
+  resolve(config: Object): any;
 }
 
-class Property implements PropertyInterface {
+export default class Property implements PropertyInterface {
+  type: Type;
   static reservedKeys: Array<string> = [
     'description',
     'type',
@@ -25,7 +28,15 @@ class Property implements PropertyInterface {
     'coerce'
   ];
 
-  constructor(public name: string, public definition: PropertyDefinition) {
+  constructor(public path: string, public definition: PropertyDefinition) {
+    this.type = Type.get(definition.type);
+  }
 
+  resolve(rawConfig: Object): any {
+    const rawValue = rawConfig[this.path] ||
+      process.env[this.definition.env] ||
+      this.definition.default;
+
+    return this.type.cast(rawValue);
   }
 }

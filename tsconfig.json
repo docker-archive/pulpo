@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "module": "system",
+    "allowSyntheticDefaultImports": true,
+    "outDir": "lib"
+  },
+  "filesGlob": [
+    "./src/**/*.ts",
+    "./src/**/*.tsx"
+  ]
+}
