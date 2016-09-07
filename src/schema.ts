@@ -3,11 +3,14 @@
 import path = require('path');
 import dotty = require('dotty');
 
+import Property, { PropertyDefinition } from './property';
+import Type, { TypeDefinition } from './type';
+
 import numberType from './types/number';
 import booleanType from './types/boolean';
 import stringType from './types/string';
-import Property, { PropertyDefinition } from './property';
-import Type, { TypeDefinition } from './type';
+import arrayType from './types/array';
+import objectType from './types/object';
 
 interface HydrateOptionsDefinition {
   transform?: boolean;
@@ -68,3 +71,5 @@ export default class Schema {
 Schema.addType('number', numberType);
 Schema.addType('string', stringType);
 Schema.addType('boolean', booleanType);
+Schema.addType('array', arrayType);
+Schema.addType('object', objectType);

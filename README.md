@@ -163,7 +163,6 @@ Types are used to validate config values. By default Pulpo comes with basic prim
 * 'string'
 * 'number'
 * 'object'
-* 'function'
 * 'boolean'
 * 'array'
 
