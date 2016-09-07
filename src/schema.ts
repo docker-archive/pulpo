@@ -1,7 +1,9 @@
 /// <reference path='../typings/index.d.ts' />
 
-import numberType from './types/number';
 import path = require('path');
+import numberType from './types/number';
+import booleanType from './types/boolean';
+import stringType from './types/string';
 import Property from './property';
 import Type, { TypeDefinition } from './type';
 
@@ -46,3 +48,5 @@ export default class Schema {
 }
 
 Schema.addType('number', numberType);
+Schema.addType('string', stringType);
+Schema.addType('boolean', booleanType);

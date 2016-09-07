@@ -1,4 +1,4 @@
-import dotty from 'dotty';
+import dotty = require('dotty');
 import yargs = require('yargs');
 import Type from './type';
 
@@ -44,7 +44,7 @@ export default class Property implements PropertyInterface {
       rawValue = process.env[env];
     } else if (resolve) {
       rawValue = resolve(rawConfig);
-    } else if (dotty.exists(rawConfig, this.path) {
+    } else if (dotty.exists(rawConfig, this.path)) {
       rawValue = dotty.get(rawConfig, this.path);
     } else {
       rawValue = this.definition.default;

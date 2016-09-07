@@ -10,7 +10,7 @@
     "url": "git+https://github.com/docker/pulpo.git"
   },
   "scripts": {
-    "build": "tsc src/* --outDir lib",
+    "build": "tsc src/*.ts  --rootDir src --outdir lib --module commonjs --target es6",
     "deps": "next-update --tldr --keep",
     "lint": "eslint .",
     "precommit": "npm run -s lint",
