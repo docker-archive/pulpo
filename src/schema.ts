@@ -1,26 +1,27 @@
 /// <reference path='../typings/index.d.ts' />
 
 import path = require('path');
+import dotty = require('dotty');
+
 import numberType from './types/number';
 import booleanType from './types/boolean';
 import stringType from './types/string';
-import Property from './property';
+import Property, { PropertyDefinition } from './property';
 import Type, { TypeDefinition } from './type';
 
-interface HydratedConfig {
-
-}
-
-interface ConfigInterface {
-
+interface HydrateOptionsDefinition {
+  coerce?: boolean;
+  cast?: boolean;
+  validate?: boolean;
 }
 
 interface SchemaDefinition {
-
+  [optName: string]: PropertyDefinition;
 }
 
 export default class Schema {
   definition: Object;
+  keys: Array<string>;
 
   static parse(definition: SchemaDefinition): Object {
     return Object.keys(definition).reduce((obj, key) => {
@@ -35,11 +36,28 @@ export default class Schema {
 
   constructor(definition: SchemaDefinition) {
     this.definition = Schema.parse(definition);
+    this.keys = Object.keys(this.definition);
   }
 
-  hydrate(rawConfig: ConfigInterface): HydratedConfig {
-    const hydratedConfig = Object.keys(this.definition).reduce((obj, key) => {
-      obj[key] = this.definition[key].resolve(rawConfig);
+  hydrate(rawConfig: Object, options: HydrateOptionsDefinition = {}): Object {
+    const hydratedConfig = this.keys.reduce((obj, key) => {
+      const property = dotty.get(this.definition, key);
+
+      let value = property.resolve(rawConfig);
+
+      if (!Reflect.has(options, 'coerce') || options.coerce) {
+        value = property.coerce(value, rawConfig);
+      }
+
+      if (!Reflect.has(options, 'cast') || options.cast) {
+        value = property.cast(value);
+      }
+
+      if (!Reflect.has(options, 'validate') || options.validate) {
+        property.validate(value);
+      }
+
+      dotty.put(obj, key, value);
       return obj;
     }, {});
 

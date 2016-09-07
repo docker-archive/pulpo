@@ -5,7 +5,9 @@ import { TypeDefinition, Validator } from '../type';
 
 const stringType: TypeDefinition = {
   validate: (value: any) => {
-    return typeof value === 'string' ? true : `Value ${value} is not a string`;
+    console.log(value, typeof value);
+    if (typeof value === 'string') return;
+    return `Value ${value} is not a string`;
   },
   cast: typecast.string.bind(typecast),
 };

@@ -5,7 +5,8 @@ import { TypeDefinition, Validator } from '../type';
 
 const booleanType: TypeDefinition = {
   validate: (value: any) => {
-    return typeof value === 'boolean' ? true : `Value ${value} is not a boolean`;
+    if (typeof value === 'boolean') return;
+    return `Value ${value} is not a boolean`;
   },
   cast: typecast.boolean.bind(typecast),
 };

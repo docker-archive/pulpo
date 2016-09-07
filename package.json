@@ -12,7 +12,7 @@
   "scripts": {
     "build": "tsc src/*.ts  --rootDir src --outdir lib --module commonjs --target es6",
     "deps": "next-update --tldr --keep",
-    "lint": "eslint .",
+    "lint": "eslint **/*.ts",
     "precommit": "npm run -s lint",
     "start": "npm run -s test -- --watch --coverage",
     "test": "jest",
@@ -40,7 +40,7 @@
       "tsx",
       "js"
     ],
-    "testRegex": "/test/.*\\.spec\\.(ts|tsx|js)$"
+    "testRegex": "/test/.*\\.spec\\.(ts|tsx)$"
   },
   "dependencies": {
     "dotty": "0.0.2",

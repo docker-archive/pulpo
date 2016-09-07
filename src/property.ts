@@ -2,7 +2,7 @@ import dotty = require('dotty');
 import yargs = require('yargs');
 import Type from './type';
 
-interface PropertyDefinition {
+export interface PropertyDefinition {
   description: string;
   type: string;
   default?: any;
@@ -10,13 +10,10 @@ interface PropertyDefinition {
   env?: string;
   argv?: string;
   resolve?(config: Object): any;
+  coerce?(value: any): any;
 }
 
-interface PropertyInterface {
-  resolve(config: Object): any;
-}
-
-export default class Property implements PropertyInterface {
+export default class Property {
   type: Type;
   static reservedKeys: Array<string> = [
     'description',
@@ -38,8 +35,11 @@ export default class Property implements PropertyInterface {
 
     let rawValue;
 
-    if (argv && Reflect.has(yargs.argv, argv)) {
-      rawValue = yargs[argv];
+    // Use yargs.parse here to make sure we have a clean parsing of the CLI
+    const parsedArgs = yargs.parse(process.argv);
+
+    if (argv && Reflect.has(parsedArgs, argv)) {
+      rawValue = parsedArgs[argv];
     } else if (env && Reflect.has(process.env, env)) {
       rawValue = process.env[env];
     } else if (resolve) {
@@ -50,10 +50,20 @@ export default class Property implements PropertyInterface {
       rawValue = this.definition.default;
     }
 
-    return rawValue !== undefined ? this.type.cast(rawValue) : rawValue;
+    return rawValue;
   }
 
-  validate(value: any) {
+  cast(value: any): any {
+    return this.type.cast(value);
+  }
 
+  coerce(value: any): any {
+    return this.definition.coerce ? this.definition.coerce(value) : value;
+  }
+
+  validate(value: any): void {
+    const error: void | string = this.type.validate(value);
+    if (error === undefined) return;
+    throw new Error(`${this.path}: ${error}`);
   }
 }
