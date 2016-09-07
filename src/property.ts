@@ -1,3 +1,5 @@
+import dotty from 'dotty';
+import yargs = require('yargs');
 import Type from './type';
 
 interface PropertyDefinition {
@@ -8,7 +10,6 @@ interface PropertyDefinition {
   env?: string;
   argv?: string;
   resolve?(config: Object): any;
-  coerce?(value: any): any;
 }
 
 interface PropertyInterface {
@@ -33,10 +34,26 @@ export default class Property implements PropertyInterface {
   }
 
   resolve(rawConfig: Object): any {
-    const rawValue = rawConfig[this.path] ||
-      process.env[this.definition.env] ||
-      this.definition.default;
+    const { resolve, argv, env, type } = this.definition;
 
-    return this.type.cast(rawValue);
+    let rawValue;
+
+    if (argv && Reflect.has(yargs.argv, argv)) {
+      rawValue = yargs[argv];
+    } else if (env && Reflect.has(process.env, env)) {
+      rawValue = process.env[env];
+    } else if (resolve) {
+      rawValue = resolve(rawConfig);
+    } else if (dotty.exists(rawConfig, this.path) {
+      rawValue = dotty.get(rawConfig, this.path);
+    } else {
+      rawValue = this.definition.default;
+    }
+
+    return rawValue !== undefined ? this.type.cast(rawValue) : rawValue;
+  }
+
+  validate(value: any) {
+
   }
 }

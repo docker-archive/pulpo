@@ -43,7 +43,9 @@
     "testRegex": "/test/.*\\.spec\\.(ts|tsx|js)$"
   },
   "dependencies": {
+    "dotty": "0.0.2",
     "glob": "7.0.6",
-    "typecast": "0.0.1"
+    "typecast": "0.0.1",
+    "yargs": "5.0.0"
   }
 }
