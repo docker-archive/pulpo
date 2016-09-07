@@ -1,4 +1,3 @@
-/// <reference path='../../typings/index.d.ts' />
 import typecast = require('typecast');
 
 import { TypeDefinition, Validator } from '../type';

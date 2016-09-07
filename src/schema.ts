@@ -1,5 +1,3 @@
-/// <reference path='../typings/index.d.ts' />
-
 import path = require('path');
 import dotty = require('dotty');
 
@@ -12,14 +10,18 @@ import stringType from './types/string';
 import arrayType from './types/array';
 import objectType from './types/object';
 
-interface HydrateOptionsDefinition {
+export interface HydrateOptionsDefinition {
   transform?: boolean;
   cast?: boolean;
   validate?: boolean;
 }
 
-interface SchemaDefinition {
+export interface SchemaDefinition {
   [optName: string]: PropertyDefinition;
+}
+
+interface ParsedSchemaDefinition {
+  [optName: string]: Property;
 }
 
 export default class Schema {
@@ -27,7 +29,7 @@ export default class Schema {
   keys: Array<string>;
 
   static parse(definition: SchemaDefinition): Object {
-    return Object.keys(definition).reduce((obj, key) => {
+    return Object.keys(definition).reduce((obj: ParsedSchemaDefinition, key: string) => {
       obj[key] = new Property(key, definition[key]);
       return obj;
     }, {});

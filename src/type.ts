@@ -1,4 +1,5 @@
-export interface Validator { (value: any): string | undefined; }
+export interface Validator { (value: any): string | void; }
+
 export interface TypeDefinition {
   validate: Validator;
   cast?(value: any): any;

@@ -33,7 +33,7 @@ export default class Property {
   resolve(rawConfig: Object): any {
     const { resolve, argv, env, type } = this.definition;
 
-    let rawValue;
+    let rawValue: any;
 
     // Use yargs.parse here to make sure we have a clean parsing of the CLI
     const parsedArgs = yargs.parse(process.argv);

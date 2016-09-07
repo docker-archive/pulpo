@@ -4,13 +4,13 @@
   "description": "Configuration mechanism",
   "author": "Patrick Camacho <patrick.camacho@docker.com>",
   "license": "MIT",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/docker/pulpo.git"
   },
   "scripts": {
-    "build": "tsc src/*.ts  --rootDir src --outdir lib --module commonjs --target es6",
+    "build": "tsc",
     "deps": "next-update --tldr --keep",
     "lint": "eslint **/*.ts",
     "precommit": "npm run -s lint",
