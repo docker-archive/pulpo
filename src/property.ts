@@ -10,7 +10,7 @@ export interface PropertyDefinition {
   env?: string;
   argv?: string;
   resolve?(config: Object): any;
-  coerce?(value: any): any;
+  transform?(value: any): any;
 }
 
 export default class Property {
@@ -23,7 +23,7 @@ export default class Property {
     'env',
     'argv',
     'resolve',
-    'coerce'
+    'transform'
   ];
 
   constructor(public path: string, public definition: PropertyDefinition) {
@@ -57,8 +57,8 @@ export default class Property {
     return this.type.cast(value);
   }
 
-  coerce(value: any): any {
-    return this.definition.coerce ? this.definition.coerce(value) : value;
+  transform(value: any): any {
+    return this.definition.transform ? this.definition.transform(value) : value;
   }
 
   validate(value: any): void {

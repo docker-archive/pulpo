@@ -7,3 +7,4 @@ lib/
 coverage/
 .nyc_output/
 src/**/*.js
+test/**/*.js

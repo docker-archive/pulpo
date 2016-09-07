@@ -3,7 +3,7 @@ Pulpo
 
 Validate and build configurations in Node.
 
-- **Static Schema**: Use JSON to define schemas for configuration 
+- **Static Schema**: Use JSON to define schemas for configuration
 
 - **Extensible and Configurable**: Pulpo provides an easy interface for defining types, resolving configurations, coercing values, and allowing CLI overrides.
 
@@ -92,6 +92,13 @@ const config = schema.hydrate({ server: { port: 8888 } });
 
 The hydrate function will also validate the values and throw any errors.
 
+#### Options
+Hydrate also allows for a second argument to be passed in that contains options:
+
+* transform (**default true**) - whether or not to use the property transform method on a value
+* cast (**default true**) - whether or not to cast the value before validating
+* validate (**default true**) - whether or not to validate a given value
+
 Properties
 ---
 Properties are definitions for a given configuration key.
@@ -106,24 +113,26 @@ const schema = new Schema({
     default: 'development',
     env: 'ENV',
     argv: 'env',
-    resolve: (configObj) => configObj.env
+    resolve: (configObj) => configObj.env,
+    transform: (value) => value.toUpperCase()
   }
 });
 
 const config = schema.hydrate({env: 'test'});
-console.log(config.environment); // test
+console.log(config.environment); // TEST
 ```
 
-In the above example, Pulpo is doing a few things at the time of hydrate:
+In the above example, Pulpo is doing a few things at the time of hydrate for **each** property in the schema:
 
-1. Parses the JSON configuration to create
-1. Uses the `environment.resolve` function to look up the value off the config object
 1. Resolves the value in the following order, stopping once a value is found:
   1. Command line arg `--env=<value>`
   1. Process environment value `process.env.ENV`
-  1. Configuration object value using the given `resolve` function, or the name of the property if a resolve method is not provided
-  1. Default value
-1. Validates that the value is of type `string`
+  1. Passed in configuration object value using the given `resolve` function in the property,
+     *or* the name of the property if a resolve method is not provided
+  1. Default value defined in the property
+1. Transforms the value if a transform method has been provided for the property
+1. Casts the value using the property type provided
+1. Validates that the resolved, transformed, cast value is of type defined in the property
 
 ### Definition
 A property is comprised of the following keyed values:
@@ -135,7 +144,6 @@ A property is comprised of the following keyed values:
 * **env** (*optional string*) - the `process.env` key for looking up a property value
 * **argv** (*optional string*) - the command line arg key for looking up a property value
 * **resolve** (*optional function*) - a function to look up a value from a config object in a different way than using the property name
-
   ```js
   (configObject) => configObject.differentKey
   ```
@@ -145,7 +153,7 @@ A property is comprised of the following keyed values:
   ```
 
 ### Reserved Keys
-When a schema is parsed, any keys that match the [Property options](#Options) will be automatically used in the definition of the Property. These keys cannot be used as Property names.
+When a schema is parsed, any keys that match the [Property definition](#definition) will be automatically used in the definition of the Property. These keys cannot be used as Property names.
 
 Types
 ---
@@ -155,6 +163,7 @@ Types are used to validate config values. By default Pulpo comes with basic prim
 * 'object'
 * 'function'
 * 'boolean'
+* 'array'
 
 ### Adding Types
 New Types can be added to Pulpo for further validation:
@@ -162,12 +171,13 @@ New Types can be added to Pulpo for further validation:
 ```js
 import Pulpo from 'pulpo';
 
-Pulpo.addType('int', (value) => {
-  if (!Number.isInteger(parseFloat(value, 10)) {
-    return 'Value must be of type integer';
-  }
-
-  return true;
+Pulpo.addType('int', {
+  validate: (value) => {
+    if (!Number.isInteger(parseFloat(value, 10)) {
+      return 'Value must be of type integer';
+    }
+  },
+  cast: (value) => parseFloat(value, 10),
 );
 
 ...
@@ -181,5 +191,4 @@ const schema = new Pulpo({
 });
 ```
 
-Types are a validation function that receives a value and returns either the boolean value `true` or an error message to be displayed to the user.
-
+Types are comprised of a validation function that receives a value and returns either void or an error message to be displayed to the user and a cast method that transforms a value before validating.

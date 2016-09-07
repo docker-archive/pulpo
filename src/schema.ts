@@ -10,7 +10,7 @@ import Property, { PropertyDefinition } from './property';
 import Type, { TypeDefinition } from './type';
 
 interface HydrateOptionsDefinition {
-  coerce?: boolean;
+  transform?: boolean;
   cast?: boolean;
   validate?: boolean;
 }
@@ -45,8 +45,8 @@ export default class Schema {
 
       let value = property.resolve(rawConfig);
 
-      if (!Reflect.has(options, 'coerce') || options.coerce) {
-        value = property.coerce(value, rawConfig);
+      if (!Reflect.has(options, 'transform') || options.transform) {
+        value = property.transform(value, rawConfig);
       }
 
       if (!Reflect.has(options, 'cast') || options.cast) {

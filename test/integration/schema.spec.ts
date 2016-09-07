@@ -62,13 +62,13 @@ describe('Resolve', () => {
   });
 });
 
-describe('Coerce', () => {
-  it('coerces the value using a given property definition', () => {
+describe('Transform', () => {
+  it('transforms the value using a given property definition', () => {
     const schema = new Schema({
       origin: {
         description: 'description',
         type: 'string',
-        coerce: (value) => value.join(':'),
+        transform: (value) => value.join(':'),
       }
     });
 
