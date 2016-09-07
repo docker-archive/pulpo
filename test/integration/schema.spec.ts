@@ -4,6 +4,7 @@ describe('Hydrate', () => {
   it('Accepts a provided value', () => {
     const schema = new Schema({
       port: {
+        type: 'number',
         default: 8888,
       },
     });
@@ -15,6 +16,7 @@ describe('Hydrate', () => {
     process.env.ENV = 4000;
     const schema = new Schema({
       port: {
+        type: 'number',
         default: 8888,
         env: 'ENV'
       },
@@ -28,6 +30,7 @@ describe('Hydrate', () => {
   it('falls back to default value', () => {
     const schema = new Schema({
       port: {
+        type: 'number',
         default: 8888,
       },
     });
@@ -38,10 +41,10 @@ describe('Hydrate', () => {
   it('Throws an error if a required property is not provided', () => {
     const schema = new Schema({
       port: {
+        type: 'number',
         required: true,
       },
     });
-
-    expect(schema.hydrate({})).toEqual({ port: 8888 });
+    expect(schema.hydrate.bind(schema, {})).toThrow();
   })
 })

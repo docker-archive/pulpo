@@ -11,7 +11,7 @@ const numberType: TypeDefinition = {
 
     return `Value ${value} is not a number`;
   },
-  cast: typecast.number.bind(this),
+  cast: typecast.number.bind(typecast),
 };
 
 export default numberType;

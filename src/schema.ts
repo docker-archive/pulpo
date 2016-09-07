@@ -1,5 +1,6 @@
 /// <reference path='../typings/index.d.ts' />
 
+import numberType from './types/number';
 import path = require('path');
 import Property from './property';
 import Type, { TypeDefinition } from './type';
@@ -44,9 +45,4 @@ export default class Schema {
   }
 }
 
-// glob.sync(path.join(__dirname, '/types/**.js')).forEach((file) => {
-//   console.log(file);
-//   Schema.addType(path.basename(file, path.extname(file)), require(file));
-// });
-
-Schema.addType('number', require('./types/number'));
+Schema.addType('number', numberType);

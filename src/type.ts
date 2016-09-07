@@ -1,7 +1,7 @@
 export interface Validator { (value: any): string | boolean; }
 export interface TypeDefinition {
   validate: Validator;
-  cast(value: any): any;
+  cast?(value: any): any;
 }
 
 export default class Type {
@@ -21,6 +21,7 @@ export default class Type {
   }
 
   cast(value: any): any {
-
+    const { cast } = this.definition;
+    return cast ? cast(value) : value;
   }
 }
