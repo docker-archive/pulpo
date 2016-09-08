@@ -13,6 +13,10 @@ export interface PropertyDefinition {
   transform?(value: any): any;
 }
 
+function isDefined(value: any): boolean {
+  return value !== undefined && value !== null;
+}
+
 export default class Property {
   type: Type;
   static reservedKeys: Array<string> = [
@@ -40,34 +44,42 @@ export default class Property {
 
     if (argv && Reflect.has(parsedArgs, argv)) {
       rawValue = parsedArgs[argv];
-    } else if (env && Reflect.has(process.env, env)) {
-      rawValue = process.env[env];
-    } else if (resolve) {
-      rawValue = resolve(rawConfig);
-    } else if (dotty.exists(rawConfig, this.path)) {
-      rawValue = dotty.get(rawConfig, this.path);
-    } else {
-      rawValue = this.definition.default;
+      if (isDefined(rawValue)) return rawValue;
     }
 
-    return rawValue;
+    if (env && Reflect.has(process.env, env)) {
+      rawValue = process.env[env];
+      if (isDefined(rawValue)) return rawValue;
+    }
+
+    if (resolve) {
+      rawValue = resolve(rawConfig);
+      if (isDefined(rawValue)) return rawValue;
+    }
+
+    if (dotty.exists(rawConfig, this.path)) {
+      rawValue = dotty.get(rawConfig, this.path);
+      if (isDefined(rawValue)) return rawValue;
+    }
+
+    return this.definition.default;
   }
 
   cast(value: any): any {
-    return (value === undefined) ? value : this.type.cast(value);
+    return (!isDefined(value)) ? value : this.type.cast(value);
   }
 
   transform(value: any): any {
-    if (value === undefined) return value;
+    if (!isDefined(value)) return value;
     return this.definition.transform ? this.definition.transform(value) : value;
   }
 
   validate(value: any): void {
-    if ((value === undefined || value === null) && this.definition.required) {
+    if ((!isDefined(value)) && this.definition.required) {
       throw new Error(`${this.path} is a required parameter but no value was provided`);
     }
 
     const typeError: void | string = this.type.validate(value);
-    if (typeError !== undefined) throw new Error(`${this.path}: ${typeError}`);
+    if (isDefined(typeError)) throw new Error(`${this.path}: ${typeError}`);
   }
 }

@@ -84,7 +84,7 @@ Any object keys that are in the [Property reserved key list](#properties-reserve
 Once an instance of a schema has been created, it can be used to build a config object using `schema.hydrate`:
 
 ```js
-const schema = new Schema({...schema...});
+const schema = new Pulpo({...schema...});
 ...
 
 const config = schema.hydrate({ server: { port: 8888 } });
@@ -106,7 +106,7 @@ Properties are definitions for a given configuration key.
 ```js
 import Pulpo from 'pulpo';
 
-const schema = new Schema({
+const schema = new Pulpo({
   environment: {
     description: 'Runtime environment',
     type: 'string',
@@ -144,12 +144,12 @@ A property is comprised of the following keyed values:
 * **env** (*optional string*) - the `process.env` key for looking up a property value
 * **argv** (*optional string*) - the command line arg key for looking up a property value
 * **resolve** (*optional function*) - a function to look up a value from a config object in a different way than using the property name
-  
+
   ```js
   (configObject) => configObject.differentKey
   ```
 * **transform** (*optional function*) - a function that accepts a found value and maps it to a new value
-  
+
   ```js
   (value) => parseInt(value, 10)  
   ```
