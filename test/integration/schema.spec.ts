@@ -1,3 +1,4 @@
+/// <reference path='../../typings/index.d.ts' />
 import Schema from '../../src/schema';
 
 describe('Resolve', () => {
@@ -131,5 +132,18 @@ describe('Cast and Validate', () => {
 
     expect(schema.hydrate.bind(schema, {object: 1}, {cast: false})).toThrow();
     expect(schema.hydrate.bind(schema, {object: '{}'})).not.toThrow();
+  });
+
+  it('throws when required value not found', () => {
+    const schema = new Schema({
+      foo: {
+        description: 'testing',
+        type: 'string',
+        required: true
+      }
+    });
+
+    expect(schema.hydrate.bind(schema)).toThrow();
+    expect(schema.hydrate.bind(schema, {foo: 'string'})).not.toThrow();
   });
 });

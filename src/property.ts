@@ -1,5 +1,5 @@
 import dotty = require('dotty');
-import yargs = require('yargs');
+import minimist = require('minimist');
 import Type from './type';
 
 export interface PropertyDefinition {
@@ -35,8 +35,8 @@ export default class Property {
 
     let rawValue: any;
 
-    // Use yargs.parse here to make sure we have a clean parsing of the CLI
-    const parsedArgs = yargs.parse(process.argv);
+    // Use minimist here to make sure we have a clean parsing of the CLI
+    const parsedArgs = minimist(process.argv);
 
     if (argv && Reflect.has(parsedArgs, argv)) {
       rawValue = parsedArgs[argv];
@@ -54,16 +54,20 @@ export default class Property {
   }
 
   cast(value: any): any {
-    return this.type.cast(value);
+    return (value === undefined) ? value : this.type.cast(value);
   }
 
   transform(value: any): any {
+    if (value === undefined) return value;
     return this.definition.transform ? this.definition.transform(value) : value;
   }
 
   validate(value: any): void {
-    const error: void | string = this.type.validate(value);
-    if (error === undefined) return;
-    throw new Error(`${this.path}: ${error}`);
+    if ((value === undefined || value === null) && this.definition.required) {
+      throw new Error(`${this.path} is a required parameter but no value was provided`);
+    }
+
+    const typeError: void | string = this.type.validate(value);
+    if (typeError !== undefined) throw new Error(`${this.path}: ${typeError}`);
   }
 }
