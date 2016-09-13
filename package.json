@@ -22,8 +22,7 @@
   "devDependencies": {
     "jest-cli": "15.1.1",
     "next-update": "1.5.0",
-    "typescript": "1.8.10",
-    "typescript-eslint-parser": "0.2.0"
+    "typescript": "1.8.10"
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/preprocessor.js",
@@ -36,7 +35,6 @@
   },
   "dependencies": {
     "dotty": "0.0.2",
-    "glob": "7.0.6",
     "minimist": "1.2.0",
     "typecast": "0.0.1"
   }

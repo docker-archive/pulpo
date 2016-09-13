@@ -3,6 +3,7 @@ import dotty = require('dotty');
 
 import Property, { PropertyDefinition } from './property';
 import Type, { TypeDefinition } from './type';
+import parse from './parser';
 
 import numberType from './types/number';
 import booleanType from './types/boolean';
@@ -16,37 +17,20 @@ export interface HydrateOptionsDefinition {
   validate?: boolean;
 }
 
-export interface SchemaDefinition {
-  [optName: string]: PropertyDefinition;
-}
-
-interface ParsedSchemaDefinition {
-  [optName: string]: Property;
-}
-
 export default class Schema {
   definition: Object;
-  keys: Array<string>;
-
-  static parse(definition: SchemaDefinition): Object {
-    return Object.keys(definition).reduce((obj: ParsedSchemaDefinition, key: string) => {
-      obj[key] = new Property(key, definition[key]);
-      return obj;
-    }, {});
-  }
 
   static addType(name: string, definition: TypeDefinition): void {
     Type.set(name, definition);
   }
 
-  constructor(definition: SchemaDefinition) {
-    this.definition = Schema.parse(definition);
-    this.keys = Object.keys(this.definition);
+  constructor(rawDefinition: Object) {
+    this.definition = parse(rawDefinition);
   }
 
   hydrate(rawConfig: Object, options: HydrateOptionsDefinition = {}): Object {
-    const hydratedConfig = this.keys.reduce((obj, key) => {
-      const property = dotty.get(this.definition, key);
+    const hydratedConfig = Object.keys(this.definition).reduce((obj, key) => {
+      const property = this.definition[key];
 
       let value = property.resolve(rawConfig);
 

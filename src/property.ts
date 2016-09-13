@@ -30,7 +30,38 @@ export default class Property {
     'transform'
   ];
 
+  static requiredKeys: Array<string> = [
+    'description',
+    'type'
+  ];
+
+  static isProperty(obj: Object): boolean {
+    // Every key in object is a Property key
+    // AND
+    // Every required key is present
+    return Object.keys(obj).every(
+      (key) => !!~Property.reservedKeys.indexOf(key)
+    ) && Property.requiredKeys.every(
+      (key) => Reflect.has(obj, key)
+    );
+  }
+
+  static isNested(obj: Object): boolean {
+    return Object.keys(obj).every(
+      (key) => !~Property.reservedKeys.indexOf(key)
+    )
+  }
+
   constructor(public path: string, public definition: PropertyDefinition) {
+    if(!Property.isProperty(definition)) {
+      throw new Error(`Property definition for ${path} is not a valid property`);
+    }
+
+    const name = path.split('.').pop();
+    if (~Property.reservedKeys.indexOf(name)) {
+      throw new Error(`Property name ${name} is reserved`);
+    }
+
     this.type = Type.get(definition.type);
   }
 
@@ -75,8 +106,12 @@ export default class Property {
   }
 
   validate(value: any): void {
-    if ((!isDefined(value)) && this.definition.required) {
+    const defined = isDefined(value);
+
+    if ((!defined) && this.definition.required) {
       throw new Error(`${this.path} is a required parameter but no value was provided`);
+    } else if (!defined) {
+      return;
     }
 
     const typeError: void | string = this.type.validate(value);

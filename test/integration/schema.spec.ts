@@ -1,5 +1,7 @@
 /// <reference path='../../typings/index.d.ts' />
 import Schema from '../../src/schema';
+import nestedSchema = require('../fixtures/nested-schema.json');
+import brokenNestedSchema = require('../fixtures/broken-nested-schema.json');
 
 describe('Resolve', () => {
   it('Accepts a provided value', () => {
@@ -145,5 +147,28 @@ describe('Cast and Validate', () => {
 
     expect(schema.hydrate.bind(schema)).toThrow();
     expect(schema.hydrate.bind(schema, {foo: 'string'})).not.toThrow();
+  });
+});
+
+describe('parsing nested schemas', () => {
+  it('will properly parse a nested schema into keyed values', () => {
+    const schema = new Schema(nestedSchema);
+    expect(schema.hydrate()).toEqual({foo: {bar: 'baz'}})
+  });
+
+  it('will throw on broken nested schema', () => {
+    expect(() => new Schema(brokenNestedSchema)).toThrow(
+      new Error(`Property definition for foo is illegal`)
+    );
+  });
+
+  it('will hydrate a nested schema', () => {
+    const schema = new Schema(nestedSchema);
+    expect(schema.hydrate({foo: {bar: 'hello world'}, baz: 'testing'})).toEqual({
+      foo: {
+        bar: 'hello world'
+      },
+      baz: 'testing'
+    });
   });
 });
