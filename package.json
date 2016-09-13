@@ -1,6 +1,6 @@
 {
   "name": "pulpo",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Configuration mechanism",
   "author": "Patrick Camacho <patrick.camacho@docker.com>",
   "license": "MIT",
