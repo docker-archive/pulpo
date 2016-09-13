@@ -12,7 +12,7 @@ Validate and build configurations in Node.
 Install Pulpo with `npm` by running:
 
 ```
-npm install --save pulpo
+npm install --save @bonito/pulpo
 ```
 
 Getting started is as simple as importing Pulpo and passing it a JSON object for the schema and hydrating with a config object:
@@ -137,7 +137,7 @@ In the above example, Pulpo is doing a few things at the time of hydrate for **e
 ### Definition
 A property is comprised of the following keyed values:
 
-* **description** (*required string*) - a to define the purpose of the property
+* **description** (*required string*) - a string to define the purpose of the property
 * **type** (*required string*) - a name for the type of value to be provided
 * **default** (*optional value matching the type*) - the value to be used if none is provided
 * **required** (*optional boolean, defaults to false*)- whether a value must be found (this is ignored if a default value is given, since a value is always provided)

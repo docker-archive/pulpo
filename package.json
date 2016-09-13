@@ -1,5 +1,5 @@
 {
-  "name": "pulpo",
+  "name": "@bonito/pulpo",
   "version": "1.0.0",
   "description": "Configuration mechanism",
   "author": "Patrick Camacho <patrick.camacho@docker.com>",

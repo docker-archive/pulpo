@@ -100,7 +100,7 @@ export default class Property {
     return (!isDefined(value)) ? value : this.type.cast(value);
   }
 
-  transform(value: any): any {
+  transform(value: any, rawConfig: Object): any {
     if (!isDefined(value)) return value;
     return this.definition.transform ? this.definition.transform(value) : value;
   }
