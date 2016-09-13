@@ -1,10 +1,8 @@
 node_modules/
 *.log
-.eslintcache
 .DS_Store
 lib/
 *.json.gzip
 coverage/
-.nyc_output/
 src/**/*.js
 test/**/*.js
