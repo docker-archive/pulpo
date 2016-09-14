@@ -1,0 +1,7 @@
+{
+  "foo": {
+    "description": "simple schema key",
+    "type": "string",
+    "default": "bar"
+  }
+}

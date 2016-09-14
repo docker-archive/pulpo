@@ -1,0 +1,8 @@
+node_modules/
+*.log
+.DS_Store
+lib/
+*.json.gzip
+coverage/
+src/**/*.js
+test/**/*.js

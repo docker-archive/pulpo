@@ -1,0 +1,11 @@
+{
+  "foo": {
+    "description": "nested top level key",
+    "type": "string",
+    "bar": {
+      "description": "nested schema key",
+      "type": "string",
+      "default": "baz"
+    }
+  }
+}
