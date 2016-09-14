@@ -1,6 +1,6 @@
 {
   "name": "@bonito/pulpo",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Configuration mechanism",
   "author": "Patrick Camacho <patrick.camacho@docker.com>",
   "license": "MIT",

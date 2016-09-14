@@ -28,34 +28,44 @@ interface HydratedConfig {
   [optName: string]: any;
 }
 
-function stringLookup(str: string, config: HydratedConfig): string {
-  return str.replace(/(\$\{(.*)\})/gi, (match, group1, key) => {
-    return dotty.get(config, key);
-  });
-}
+function getter(
+  config: HydratedConfig,
+  property: Property,
+  path: string,
+  rawValue: any,
+  flags: HydrateOptionsDefinition
+): any {
+  let value: any;
 
-function getter(config: HydratedConfig, value: any, path: string, validate: boolean): any {
-  let resolvedValue: any;
-
-  switch (typeof value) {
+  switch (typeof rawValue) {
     case 'function':
-      resolvedValue = value(config, path);
+      value = rawValue(config, path);
       break;
     case 'string':
-      resolvedValue = stringLookup(value, config);
+      value = rawValue.replace(/(\$\{(.*)\})/gi, (
+        match: string,
+        group1: string,
+        key: string
+      ) => dotty.get(config, key));
       break;
     default:
-      resolvedValue = value;
+      value = rawValue;
   }
 
-  if (validate) this.definition[path].validate(resolvedValue);
-  return resolvedValue;
+  if (flags.transform) value = property.transform(value, config);
+  if (flags.cast) value = property.cast(value);
+  if (flags.validate) property.validate(value);
+
+  return value;
 };
 
 export default class Schema {
   definition: ParsedSchemaDefinition;
 
-  static parse(rawDefinition: SchemaDefinition, startingPath?: String): ParsedSchemaDefinition {
+  static parse(
+    rawDefinition: SchemaDefinition,
+    startingPath?: String
+  ): ParsedSchemaDefinition {
     // 1. Loop through keys on object
     // 2. Determine if value assigned to key is a Property or a nested object
     // 3. Convert properties to Property objects
@@ -94,25 +104,30 @@ export default class Schema {
       validate: !Reflect.has(options, 'validate') || options.validate,
     }
 
+    // Find all the schema paths we need to trace
+    const paths = Object.keys(this.definition);
+
     // Loop over and hydrate the object with getters
+    const hydratedConfig: HydratedConfig = paths.reduce((config, path) => {
+      const property = this.definition[path];
 
-    const hydratedConfig: HydratedConfig = Object.keys(this.definition).reduce((obj, key) => {
-      const property = this.definition[key];
+      const curriedGetter = getter.bind(
+        this,
+        config,
+        property,
+        path,
+        property.resolve(rawConfig),
+        flags
+      );
 
-      let value = property.resolve(rawConfig);
-
-      if (flags.transform) value = property.transform(value, rawConfig);
-      if (flags.cast) value = property.cast(value);
-
-      Object.defineProperty(obj, key, {get:  getter.bind(this, obj, value, key, flags.validate) });
-      return obj
+      Object.defineProperty(config, path, {get:  curriedGetter });
+      return config;
     }, {});
 
-    return Object.keys(this.definition).reduce((obj: HydratedConfig, key: string) => {
-      const value: any = hydratedConfig[key];
-
-      if (value) dotty.put(obj, key, value);
-      return obj;
+    // Evaluate each of the paths provided in the schema
+    return paths.reduce((config, key) => {
+      dotty.put(config, key, hydratedConfig[key]);
+      return config;
     }, {});
   }
 }
