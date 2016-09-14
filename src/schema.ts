@@ -24,6 +24,34 @@ export interface ParsedSchemaDefinition {
   [optName: string]: Property;
 }
 
+interface HydratedConfig {
+  [optName: string]: any;
+}
+
+function stringLookup(str: string, config: HydratedConfig): string {
+  return str.replace(/(\$\{(.*)\})/gi, (match, group1, key) => {
+    return dotty.get(config, key);
+  });
+}
+
+function getter(config: HydratedConfig, value: any, path: string, validate: boolean): any {
+  let resolvedValue: any;
+
+  switch (typeof value) {
+    case 'function':
+      resolvedValue = value(config, path);
+      break;
+    case 'string':
+      resolvedValue = stringLookup(value, config);
+      break;
+    default:
+      resolvedValue = value;
+  }
+
+  if (validate) this.definition[path].validate(resolvedValue);
+  return resolvedValue;
+};
+
 export default class Schema {
   definition: ParsedSchemaDefinition;
 
@@ -60,28 +88,32 @@ export default class Schema {
   }
 
   hydrate(rawConfig: Object, options: HydrateOptionsDefinition = {}): Object {
-    const hydratedConfig = Object.keys(this.definition).reduce((obj, key) => {
+    const flags = {
+      transform: !Reflect.has(options, 'transform') || options.transform,
+      cast: !Reflect.has(options, 'cast') || options.cast,
+      validate: !Reflect.has(options, 'validate') || options.validate,
+    }
+
+    // Loop over and hydrate the object with getters
+
+    const hydratedConfig: HydratedConfig = Object.keys(this.definition).reduce((obj, key) => {
       const property = this.definition[key];
 
       let value = property.resolve(rawConfig);
 
-      if (!Reflect.has(options, 'transform') || options.transform) {
-        value = property.transform(value, rawConfig);
-      }
+      if (flags.transform) value = property.transform(value, rawConfig);
+      if (flags.cast) value = property.cast(value);
 
-      if (!Reflect.has(options, 'cast') || options.cast) {
-        value = property.cast(value);
-      }
-
-      if (!Reflect.has(options, 'validate') || options.validate) {
-        property.validate(value);
-      }
-
-      dotty.put(obj, key, value);
-      return obj;
+      Object.defineProperty(obj, key, {get:  getter.bind(this, obj, value, key, flags.validate) });
+      return obj
     }, {});
 
-    return hydratedConfig;
+    return Object.keys(this.definition).reduce((obj: HydratedConfig, key: string) => {
+      const value: any = hydratedConfig[key];
+
+      if (value) dotty.put(obj, key, value);
+      return obj;
+    }, {});
   }
 }
 
