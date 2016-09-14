@@ -99,6 +99,44 @@ Hydrate also allows for a second argument to be passed in that contains options:
 * cast (**default true**) - whether or not to cast the value before validating
 * validate (**default true**) - whether or not to validate a given value
 
+#### Referencing Other Configuration Values
+It is possible to reference other values in the configuration, which will be populated with resolved values found in the referenced key. This works for both **default** values and passed in values:
+
+```js
+const schema = new Pulpo({...schema...});
+
+const config = schema.hydrate({
+  server: {
+    port: 8888,
+    hostname: 'localhost',
+    host: 'http://${server.hostname}:${server.port}'
+  }
+});
+
+console.log(config.server.host);
+// http://localhost:8888
+```
+
+#### Using Functions for Configuration Values
+When needed, a function can be passed in as a **config** or **default** value. These functions are passed two arguments: the config object and the string path of the property being resolved:
+
+```js
+const schema = new Pulpo({...schema...});
+
+const config = schema.hydrate({
+  server: {
+    port: 8888,
+    hostname: 'localhost',
+    host: (config) => `http://${config['server.hostname']}:${config['server.port']}`
+  }
+});
+
+console.log(config.server.host);
+// http://localhost:8888
+```
+
+**Note**: Configuration values are accessed through their full dot-notation strings
+
 Properties
 ---
 Properties are definitions for a given configuration key.

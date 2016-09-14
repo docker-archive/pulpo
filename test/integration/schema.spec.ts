@@ -2,6 +2,7 @@
 import Schema from '../../src/schema';
 import nestedSchema = require('../fixtures/nested-schema.json');
 import brokenNestedSchema = require('../fixtures/broken-nested-schema.json');
+import selfReferencingSchema = require('../fixtures/self-referencing-schema.json');
 
 describe('Resolve', () => {
   it('Accepts a provided value', () => {
@@ -92,7 +93,7 @@ describe('Cast and Validate', () => {
       number: {
         description: 'description',
         type: 'number',
-        default: 8888,
+        default: () => 8888,
       },
       string: {
         description: 'description',
@@ -102,7 +103,7 @@ describe('Cast and Validate', () => {
       boolean: {
         description: 'description',
         type: 'boolean',
-        default: false,
+        default: () => false,
       },
       array: {
         description: 'description',
@@ -112,7 +113,7 @@ describe('Cast and Validate', () => {
       object: {
         description: 'description',
         type: 'object',
-        default: {},
+        default: () => {},
       }
     });
 
@@ -167,6 +168,18 @@ describe('parsing nested schemas', () => {
     expect(schema.hydrate({foo: {bar: 'hello world'}, baz: 'testing'})).toEqual({
       foo: {
         bar: 'hello world'
+      },
+      baz: 'testing'
+    });
+  });
+});
+
+describe('parsing self referencing strings', () => {
+  it('handles self references', () => {
+    const schema = new Schema(selfReferencingSchema);
+    expect(schema.hydrate({ baz: 'testing' })).toEqual({
+      foo: {
+        bar: 'testing/foo'
       },
       baz: 'testing'
     });

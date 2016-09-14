@@ -1,6 +1,6 @@
 {
   "name": "@bonito/pulpo",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Configuration mechanism",
   "author": "Patrick Camacho <patrick.camacho@docker.com>",
   "license": "MIT",
@@ -17,7 +17,8 @@
     "build": "tsc",
     "deps": "next-update --tldr --keep",
     "start": "npm run -s test -- --watch --coverage",
-    "test": "jest"
+    "test": "jest",
+    "prepublish": "npm run -s test && npm run -s build"
   },
   "devDependencies": {
     "jest-cli": "15.1.1",
