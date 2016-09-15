@@ -9,5 +9,10 @@
   "baz": {
     "description": "top level value",
     "type": "string"
+  },
+  "qux": {
+    "description": "multiple references",
+    "type": "string",
+    "default": "${foo.bar}/${baz}"
   }
 }
