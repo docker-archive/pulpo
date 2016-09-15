@@ -16,20 +16,12 @@ export interface HydrateOptionsDefinition {
   validate?: boolean;
 }
 
-export interface SchemaDefinition {
-  [optName: string]: any;
-}
-
 export interface ParsedSchemaDefinition {
   [optName: string]: Property;
 }
 
-interface HydratedConfig {
-  [optName: string]: any;
-}
-
 function getter(
-  config: HydratedConfig,
+  config: Object,
   property: Property,
   path: string,
   rawValue: any,
@@ -63,7 +55,7 @@ export default class Schema {
   definition: ParsedSchemaDefinition;
 
   static parse(
-    rawDefinition: SchemaDefinition,
+    rawDefinition: Object,
     startingPath?: String
   ): ParsedSchemaDefinition {
     // 1. Loop through keys on object
@@ -93,7 +85,7 @@ export default class Schema {
     Type.set(name, definition);
   }
 
-  constructor(rawDefinition: SchemaDefinition) {
+  constructor(rawDefinition: Object) {
     this.definition = Schema.parse(rawDefinition);
   }
 
@@ -102,13 +94,13 @@ export default class Schema {
       transform: !Reflect.has(options, 'transform') || options.transform,
       cast: !Reflect.has(options, 'cast') || options.cast,
       validate: !Reflect.has(options, 'validate') || options.validate,
-    }
+    };
 
     // Find all the schema paths we need to trace
     const paths = Object.keys(this.definition);
 
     // Loop over and hydrate the object with getters
-    const hydratedConfig: HydratedConfig = paths.reduce((config, path) => {
+    const hydratedConfig = paths.reduce((config, path) => {
       const property = this.definition[path];
 
       const curriedGetter = getter.bind(

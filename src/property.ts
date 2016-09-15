@@ -49,11 +49,11 @@ export default class Property {
   static isNested(obj: Object): boolean {
     return Object.keys(obj).every(
       (key) => !~Property.reservedKeys.indexOf(key)
-    )
+    );
   }
 
   constructor(public path: string, public definition: PropertyDefinition) {
-    if(!Property.isProperty(definition)) {
+    if (!Property.isProperty(definition)) {
       throw new Error(`Property definition for ${path} is not a valid property`);
     }
 
