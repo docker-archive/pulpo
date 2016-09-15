@@ -42,11 +42,11 @@ function getter(
       value = rawValue(config, path);
       break;
     case 'string':
-      value = rawValue.replace(/(\$\{(.*)\})/gi, (
+      value = rawValue.replace(/(\$\{([^\}]*)\})/gi, (
         match: string,
         group1: string,
         key: string
-      ) => dotty.get(config, key));
+      ) => config[key]);
       break;
     default:
       value = rawValue;
@@ -120,7 +120,7 @@ export default class Schema {
         flags
       );
 
-      Object.defineProperty(config, path, {get:  curriedGetter });
+      Object.defineProperty(config, path, {get:  curriedGetter});
       return config;
     }, {});
 

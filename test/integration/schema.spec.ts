@@ -174,6 +174,53 @@ describe('parsing nested schemas', () => {
   });
 });
 
+describe('parsing functions', () => {
+  it('passes the config object in', () => {
+    const schema = new Schema(nestedSchema);
+    expect(schema.hydrate({
+      foo: {
+        bar: 'value for bar',
+      },
+      baz: (config) => config['foo.bar']
+    })).toEqual({
+      foo: {
+        bar: 'value for bar'
+      },
+      baz: 'value for bar'
+    })
+  });
+
+  it('passes the config object in to default values', () => {
+    const schema = new Schema({
+      server: {
+        port: {
+          description: 'description',
+          type: 'number',
+          default: 8888
+        },
+        origin: {
+          description: 'server origin',
+          type: 'string',
+          default: (config) => `localhost:${config['server.port']}`
+        }
+      },
+      foo: {
+        description: 'dummy',
+        type: 'string',
+        default: (config) => config['server.origin'],
+      }
+    });
+
+    expect(schema.hydrate({ server: { port: 3000 } })).toEqual({
+      server: {
+        port: 3000,
+        origin: 'localhost:3000'
+      },
+      foo: 'localhost:3000'
+    });
+  })
+});
+
 describe('parsing self referencing strings', () => {
   it('handles self references', () => {
     const schema = new Schema(selfReferencingSchema);
@@ -181,7 +228,8 @@ describe('parsing self referencing strings', () => {
       foo: {
         bar: 'testing/foo'
       },
-      baz: 'testing'
+      baz: 'testing',
+      qux: 'testing/foo/testing'
     });
   });
 });
