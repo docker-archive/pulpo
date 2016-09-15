@@ -3,7 +3,7 @@ import typecast = require('typecast');
 import { TypeDefinition, Validator } from '../type';
 
 function isObject(value: any): boolean {
-  return Object.prototype.toString.call(value) === '[object Object]'
+  return Object.prototype.toString.call(value) === '[object Object]';
 }
 
 const objectType: TypeDefinition = {

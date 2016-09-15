@@ -16,13 +16,16 @@
   "scripts": {
     "build": "tsc",
     "deps": "next-update --tldr --keep",
+    "lint": "tslint './src/**/*.ts'",
+    "precommit": "npm run -s lint",
+    "prepublish": "npm run -s lint && npm run -s test && npm run -s build",
     "start": "npm run -s test -- --watch --coverage",
-    "test": "jest",
-    "prepublish": "npm run -s test && npm run -s build"
+    "test": "jest"
   },
   "devDependencies": {
     "jest-cli": "15.1.1",
     "next-update": "1.5.0",
+    "tslint": "3.15.1",
     "typescript": "1.8.10"
   },
   "jest": {
@@ -38,5 +41,8 @@
     "dotty": "0.0.2",
     "minimist": "1.2.0",
     "typecast": "0.0.1"
+  },
+  "optionalDependencies": {
+    "husky": "0.11.7"
   }
 }
