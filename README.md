@@ -1,11 +1,12 @@
-Pulpo
----
+# Pulpo
 
-Validate and build configurations in Node.
+Define, hydrate, and validate configurations in Node.
 
-- **Static Schema**: Use JSON to define schemas for configuration
-
-- **Extensible and Configurable**: Pulpo provides an easy interface for defining types, resolving configurations, coercing values, and allowing CLI overrides.
+- **Schema**: Use JSON and JS objects to define schemas
+- **Types**: Add new types with casting and validation
+- **Casting, Transforms, and Validation**: Handle config values intelligently
+- **Source Hierarchy**: Look for values from passed in configs, ENV variables, and CLI args
+- **Self Referencing**: Reference other config values via function or string interpolation
 
 ## Getting Started
 
@@ -18,7 +19,7 @@ npm install --save @bonito/pulpo
 Getting started is as simple as importing Pulpo and passing it a JSON object for the schema and hydrating with a config object:
 
 ```js
-import Pulpo from 'pulpo';
+import Pulpo from '@bonito/pulpo';
 
 const schema = new Pulpo({
   host: {
@@ -47,7 +48,7 @@ A schema is comprised of keyed properties that are used to parse and validate co
 ### Constructor
 
 ```js
-import Pulpo from 'pulpo';
+import Pulpo from '@bonito/pulpo';
 
 const schema = new Pulpo({...schema...});
 ```
@@ -142,7 +143,7 @@ Properties
 Properties are definitions for a given configuration key.
 
 ```js
-import Pulpo from 'pulpo';
+import Pulpo from '@bonito/pulpo';
 
 const schema = new Pulpo({
   environment: {
@@ -208,7 +209,7 @@ Types are used to validate config values. By default Pulpo comes with basic prim
 New Types can be added to Pulpo for further validation:
 
 ```js
-import Pulpo from 'pulpo';
+import Pulpo from '@bonito/pulpo';
 
 Pulpo.addType('int', {
   validate: (value) => {
@@ -231,3 +232,7 @@ const schema = new Pulpo({
 ```
 
 Types are comprised of a validation function that receives a value and returns either void or an error message to be displayed to the user and a cast method that transforms a value before validating.
+
+## License
+
+Pulpo is licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for the full license text.
