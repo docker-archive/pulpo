@@ -1,6 +1,6 @@
 {
   "name": "pulpo",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Configuration mechanism",
   "author": "Patrick Camacho <patrick.camacho@docker.com>",
   "license": "Apache",
@@ -28,7 +28,6 @@
     "build": "tsc",
     "deps": "next-update --tldr --keep",
     "lint": "tslint './src/**/*.ts'",
-    "precommit": "npm run -s lint",
     "prepublish": "npm run -s lint && npm run -s test && npm run -s build",
     "start": "npm run -s test -- --watch --coverage",
     "test": "jest"
@@ -52,8 +51,5 @@
     "dotty": "0.0.2",
     "minimist": "1.2.0",
     "typecast": "0.0.1"
-  },
-  "optionalDependencies": {
-    "husky": "0.11.7"
   }
 }
