@@ -1,9 +1,20 @@
 {
-  "name": "@bonito/pulpo",
-  "version": "1.1.2",
+  "name": "pulpo",
+  "version": "1.2.0",
   "description": "Configuration mechanism",
   "author": "Patrick Camacho <patrick.camacho@docker.com>",
-  "license": "Apache 2.0",
+  "license": "Apache",
+  "keywords": [
+    "configuration",
+    "config",
+    "env",
+    "configurator",
+    "docker",
+    "schema",
+    "setup",
+    "cast",
+    "validate"
+  ],
   "main": "lib/index.js",
   "typings": "lib/index",
   "files": [

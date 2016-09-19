@@ -7,19 +7,20 @@ Define, hydrate, and validate configurations in Node.
 - **Casting, Transforms, and Validation**: Handle config values intelligently
 - **Source Hierarchy**: Look for values from passed in configs, ENV variables, and CLI args
 - **Self Referencing**: Reference other config values via function or string interpolation
+- **Self Documenting**: Schema documentation can be generated automatically
 
 ## Getting Started
 
 Install Pulpo with `npm` by running:
 
 ```
-npm install --save @bonito/pulpo
+npm install --save pulpo
 ```
 
 Getting started is as simple as importing Pulpo and passing it a JSON object for the schema and hydrating with a config object:
 
 ```js
-import Pulpo from '@bonito/pulpo';
+import Pulpo from 'pulpo';
 
 const schema = new Pulpo({
   host: {
@@ -28,7 +29,7 @@ const schema = new Pulpo({
     default: 'localhost'
   },
   port: {
-    description: 'Port for dev server to run on'
+    description: 'Port for dev server to run on',
     type: 'int',
     default: '3000',
     env: 'PORT'
@@ -48,7 +49,7 @@ A schema is comprised of keyed properties that are used to parse and validate co
 ### Constructor
 
 ```js
-import Pulpo from '@bonito/pulpo';
+import Pulpo from 'pulpo';
 
 const schema = new Pulpo({...schema...});
 ```
@@ -66,7 +67,7 @@ const schema = new Pulpo({
       default: 'localhost'
     },
     port: {
-      description: 'Port for dev server to run on'
+      description: 'Port for dev server to run on',
       type: 'number',
       default: '3000',
       env: 'PORT'
@@ -143,7 +144,7 @@ Properties
 Properties are definitions for a given configuration key.
 
 ```js
-import Pulpo from '@bonito/pulpo';
+import Pulpo from 'pulpo';
 
 const schema = new Pulpo({
   environment: {
@@ -209,7 +210,7 @@ Types are used to validate config values. By default Pulpo comes with basic prim
 New Types can be added to Pulpo for further validation:
 
 ```js
-import Pulpo from '@bonito/pulpo';
+import Pulpo from 'pulpo';
 
 Pulpo.addType('int', {
   validate: (value) => {
@@ -232,6 +233,43 @@ const schema = new Pulpo({
 ```
 
 Types are comprised of a validation function that receives a value and returns either void or an error message to be displayed to the user and a cast method that transforms a value before validating.
+
+## Documenting
+
+Schemas can be used to provide easy documentation for anyone interacting with the configurations:
+
+```js
+const schema = new Pulpo({
+  server: {
+    host: {
+      description: 'Host for the server',
+      type: 'string',
+      default: 'localhost'
+    },
+    port: {
+      description: 'Port for dev server to run on',
+      type: 'number',
+      default: '3000',
+      env: 'PORT'
+    }
+  }
+});
+
+console.log(schema.document());
+// {
+//   "server.host": {
+//     "description": "Host for the server",
+//     "type": "string",
+//     "default": "localhost"
+//   },
+//   "server.port": {
+//     "description": "Port for dev server to run on",
+//     "type": "number",
+//     "default": "3000",
+//     "env": "PORT"
+//   }
+// }
+```
 
 ## License
 

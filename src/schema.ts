@@ -122,6 +122,19 @@ export default class Schema {
       return config;
     }, {});
   }
+
+  document(): Object {
+    // Trace the paths and build string versions of all the property keys
+    return Object.keys(this.definition).reduce((definition, path) => {
+      definition[path] = Property.reservedKeys.reduce((obj, key) => {
+        const value = this.definition[path].definition[key];
+        if (value === undefined) return obj;
+        obj[key] = value.toString();
+        return obj;
+      }, {});
+      return definition;
+    }, {});
+  }
 }
 
 Schema.addType('number', numberType);
