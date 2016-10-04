@@ -62,7 +62,12 @@ export default class Property {
       throw new Error(`Property name ${name} is reserved`);
     }
 
-    this.type = Type.get(definition.type);
+    const type = Type.get(definition.type);
+    if (!type) {
+      throw new Error(`Property type for ${path} is not a valid type`);
+    }
+
+    this.type = type;
   }
 
   resolve(rawConfig: Object): any {

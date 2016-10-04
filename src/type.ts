@@ -18,6 +18,10 @@ export default class Type {
   }
 
   constructor(public name: string, public definition: TypeDefinition) {
+    if (typeof definition.validate !== 'function') {
+      throw new Error(`Type ${name} does not have validate method`);
+    }
+    
     this.validate = definition.validate;
   }
 

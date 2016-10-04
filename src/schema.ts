@@ -9,6 +9,7 @@ import booleanType from './types/boolean';
 import stringType from './types/string';
 import arrayType from './types/array';
 import objectType from './types/object';
+import pathType from './types/path';
 
 export interface HydrateOptionsDefinition {
   transform?: boolean;
@@ -142,3 +143,4 @@ Schema.addType('string', stringType);
 Schema.addType('boolean', booleanType);
 Schema.addType('array', arrayType);
 Schema.addType('object', objectType);
+Schema.addType('path', pathType);
