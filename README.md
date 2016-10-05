@@ -199,12 +199,15 @@ When a schema is parsed, any keys that match the [Property definition](#definiti
 
 Types
 ---
-Types are used to validate config values. By default Pulpo comes with basic primitive types:
+Types are used to validate config values.
+
+By default Pulpo comes with a few basic types:
 * 'string'
 * 'number'
 * 'object'
 * 'boolean'
 * 'array'
+* 'path'
 
 ### Adding Types
 New Types can be added to Pulpo for further validation:
