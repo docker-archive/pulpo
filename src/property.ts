@@ -10,7 +10,7 @@ export interface PropertyDefinition {
   env?: string;
   argv?: string;
   resolve?(config: Object): any;
-  transform?(value: any): any;
+  transform?(value: any, config: Object): any;
 }
 
 function isDefined(value: any): boolean {
@@ -106,8 +106,8 @@ export default class Property {
   }
 
   transform(value: any, rawConfig: Object): any {
-    if (!isDefined(value)) return value;
-    return this.definition.transform ? this.definition.transform(value) : value;
+    if (!(isDefined(value) && this.definition.transform)) return value;
+    return this.definition.transform(value, rawConfig);
   }
 
   validate(value: any): void {

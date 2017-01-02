@@ -188,10 +188,10 @@ A property is comprised of the following keyed values:
   ```js
   (configObject) => configObject.differentKey
   ```
-* **transform** (*optional function*) - a function that accepts a found value and maps it to a new value
+* **transform** (*optional function*) - a function that accepts a found value and maps it to a new value (it recieves the config as a secondary argument)
 
   ```js
-  (value) => parseInt(value, 10)  
+  (value, config) => parseInt(value, 10)  
   ```
 
 ### Reserved Keys
