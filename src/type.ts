@@ -21,7 +21,7 @@ export default class Type {
     if (typeof definition.validate !== 'function') {
       throw new Error(`Type ${name} does not have validate method`);
     }
-    
+
     this.validate = definition.validate;
   }
 
