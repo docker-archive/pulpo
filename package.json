@@ -1,6 +1,6 @@
 {
   "name": "pulpo",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "Configuration mechanism",
   "author": "Patrick Camacho <patrick.camacho@docker.com>",
   "license": "Apache-2.0",
@@ -33,10 +33,10 @@
     "test": "jest"
   },
   "devDependencies": {
-    "jest-cli": "15.1.1",
+    "jest": "18.1.0",
     "next-update": "1.5.0",
-    "tslint": "3.15.1",
-    "typescript": "1.8.10"
+    "tslint": "^4.4.0",
+    "typescript": "^2.1.4"
   },
   "jest": {
     "transform": {
@@ -51,11 +51,7 @@
   },
   "dependencies": {
     "dotty": "0.0.2",
-    "jest-cli": "18.1.0",
     "minimist": "1.2.0",
-    "next-update": "1.5.1",
-    "tslint": "4.2.0-dev.0",
-    "typecast": "0.0.1",
-    "typescript": "2.2.0-dev.20170101"
+    "typecast": "0.0.1"
   }
 }
