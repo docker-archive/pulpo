@@ -1,8 +1,8 @@
-export interface Validator { (value: any): string | void; }
+export interface Validator { (value: any, config: Object): string | void; }
 
 export interface TypeDefinition {
   validate: Validator;
-  cast?(value: any): any;
+  cast?(value: any, config: Object): any;
 }
 
 export default class Type {
@@ -25,8 +25,8 @@ export default class Type {
     this.validate = definition.validate;
   }
 
-  cast(value: any): any {
+  cast(value: any, config: Object): any {
     const { cast } = this.definition;
-    return cast ? cast(value) : value;
+    return cast ? cast(value, config) : value;
   }
 }

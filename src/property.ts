@@ -101,8 +101,8 @@ export default class Property {
     return this.definition.default;
   }
 
-  cast(value: any): any {
-    return (!isDefined(value)) ? value : this.type.cast(value);
+  cast(value: any, config: Object): any {
+    return (!isDefined(value)) ? value : this.type.cast(value, config);
   }
 
   transform(value: any, rawConfig: Object): any {
@@ -110,7 +110,7 @@ export default class Property {
     return this.definition.transform(value, rawConfig);
   }
 
-  validate(value: any): void {
+  validate(value: any, config: Object): void {
     const defined = isDefined(value);
 
     if ((!defined) && this.definition.required) {
@@ -119,7 +119,7 @@ export default class Property {
       return;
     }
 
-    const typeError: void | string = this.type.validate(value);
+    const typeError: void | string = this.type.validate(value, config);
     if (isDefined(typeError)) throw new Error(`${this.path}: ${typeError}`);
   }
 }

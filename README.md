@@ -216,12 +216,12 @@ New Types can be added to Pulpo for further validation:
 import Pulpo from 'pulpo';
 
 Pulpo.addType('int', {
-  validate: (value) => {
+  validate: (value, config) => {
     if (!Number.isInteger(parseFloat(value, 10)) {
       return 'Value must be of type integer';
     }
   },
-  cast: (value) => parseFloat(value, 10),
+  cast: (value, config) => parseFloat(value, 10),
 );
 
 ...

@@ -46,8 +46,8 @@ function getter(
   }
 
   if (flags.transform) value = property.transform(value, config);
-  if (flags.cast) value = property.cast(value);
-  if (flags.validate) property.validate(value);
+  if (flags.cast) value = property.cast(value, config);
+  if (flags.validate) property.validate(value, config);
 
   return value;
 };
